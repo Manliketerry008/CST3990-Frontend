@@ -125,8 +125,8 @@
                     <section v-if="featuredProducts.length > 0" class="featured-section">
                         <div class="section-header">
                             <h2 class="section-title">Featured Products</h2>
-                            <button @click="setCategory('')" class="btn btn-outline">
-                                View All
+                            <button @click="setCategory(''); setActiveView('products')" class="btn btn-outline">
+                                View All Products
                             </button>
                         </div>
                         
@@ -166,7 +166,7 @@
                             </div>
                         </div>
                     </section>
-
+                    
                     <!-- Products Section -->
                     <section class="products-container">
                         <div class="products-header">
