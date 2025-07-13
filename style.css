@@ -328,7 +328,6 @@ body {
 
 /* Fallback for images that fail to load */
 .product-image::before {
-    content: '👕';
     position: absolute;
     top: 50%;
     left: 50%;
