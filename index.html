@@ -1326,6 +1326,13 @@
                 setActiveView(view) {
                     this.activeView = view;
                     
+                    // Clear search and category when going to home
+                    if (view === 'home') {
+                        this.searchQuery = '';
+                        this.suggestions = [];
+                        this.currentCategory = '';
+                    }
+                    
                     // Load data based on view
                     if (view === 'orders' && this.user && this.apiConnected) {
                         this.loadOrders();
@@ -1333,7 +1340,23 @@
                         this.loadAdminData();
                     } else if (view === 'profile' && this.user) {
                         this.loadProfileData();
+                    } else if (view === 'products') {
+                        this.loadProducts();
                     }
+                },
+                
+                setCategory(category) {
+                    this.currentCategory = category;
+                    this.currentPage = 1;
+                    this.activeView = 'products';  // Always go to products view when selecting category
+                    this.loadProducts();
+                },
+                
+                performSearch() {
+                    this.suggestions = [];
+                    this.currentPage = 1;
+                    this.activeView = 'products';  // Go to products view when searching
+                    this.loadProducts();
                 },
                 
                 // API Connection
@@ -1413,6 +1436,20 @@
                         
                     } catch (error) {
                         this.authError = error.response?.data?.message || 'Authentication failed';
+                    }
+                },
+
+                async loadFeaturedProducts() {
+                    if (!this.apiConnected) {
+                        this.featuredProducts = this.fallbackProducts.filter(p => p.featured).slice(0, 4);
+                        return;
+                    }
+                    
+                    try {
+                        const response = await axios.get('/products/featured/list');
+                        this.featuredProducts = (response.data || []).slice(0, 4); // Limit to 4 for homepage
+                    } catch (error) {
+                        this.featuredProducts = this.fallbackProducts.filter(p => p.featured).slice(0, 4);
                     }
                 },
                 
