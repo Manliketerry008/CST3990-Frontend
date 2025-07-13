@@ -88,16 +88,16 @@
         <nav class="category-nav">
             <div class="container">
                 <div class="category-links">
-                    <a href="#" @click="setCategory('')" :class="{ active: currentCategory === '' }" class="category-link">
+                    <a href="#" @click="setCategory(''); setActiveView('home')" :class="{ active: currentCategory === '' && activeView === 'home' }" class="category-link">
                         All Products
                     </a>
-                    <a href="#" @click="setCategory('men')" :class="{ active: currentCategory === 'men' }" class="category-link">
+                    <a href="#" @click="setCategory('men'); setActiveView('products')" :class="{ active: currentCategory === 'men' && activeView === 'products' }" class="category-link">
                         Men
                     </a>
-                    <a href="#" @click="setCategory('women')" :class="{ active: currentCategory === 'women' }" class="category-link">
+                    <a href="#" @click="setCategory('women'); setActiveView('products')" :class="{ active: currentCategory === 'women' && activeView === 'products' }" class="category-link">
                         Women
                     </a>
-                    <a href="#" @click="setCategory('kids')" :class="{ active: currentCategory === 'kids' }" class="category-link">
+                    <a href="#" @click="setCategory('kids'); setActiveView('products')" :class="{ active: currentCategory === 'kids' && activeView === 'products' }" class="category-link">
                         Kids
                     </a>
                     <a v-if="user" href="#" @click="setActiveView('orders')" :class="{ active: activeView === 'orders' }" class="category-link">
@@ -116,12 +116,12 @@
                     <section class="hero">
                         <h1>Welcome to Silk Touch</h1>
                         <p>Discover the latest fashion trends for the whole family</p>
-                        <button @click="setCategory('')" class="btn btn-primary">
+                        <button @click="setCategory(''); setActiveView('products')" class="btn btn-primary">
                             Shop Now
                         </button>
                     </section>
 
-                    <!-- Featured Products -->
+                    <!-- Featured Products - ONLY SHOWN ON HOMEPAGE -->
                     <section v-if="featuredProducts.length > 0" class="featured-section">
                         <div class="section-header">
                             <h2 class="section-title">Featured Products</h2>
@@ -166,8 +166,40 @@
                             </div>
                         </div>
                     </section>
-                    
-                    <!-- Products Section -->
+
+                    <!-- Quick Categories Section - HOMEPAGE ONLY -->
+                    <section class="quick-categories">
+                        <div class="section-header">
+                            <h2 class="section-title">Shop by Category</h2>
+                        </div>
+                        <div class="category-cards">
+                            <div class="category-card" @click="setCategory('men'); setActiveView('products')">
+                                <div class="category-image">
+                                    <i class="fas fa-male"></i>
+                                </div>
+                                <h3>Men's Fashion</h3>
+                                <p>Discover the latest in men's clothing</p>
+                            </div>
+                            <div class="category-card" @click="setCategory('women'); setActiveView('products')">
+                                <div class="category-image">
+                                    <i class="fas fa-female"></i>
+                                </div>
+                                <h3>Women's Fashion</h3>
+                                <p>Elegant styles for every occasion</p>
+                            </div>
+                            <div class="category-card" @click="setCategory('kids'); setActiveView('products')">
+                                <div class="category-image">
+                                    <i class="fas fa-child"></i>
+                                </div>
+                                <h3>Kids' Collection</h3>
+                                <p>Fun and comfortable clothing for kids</p>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+
+                <!-- Products View (Separate from Home) -->
+                <div v-if="activeView === 'products'">
                     <section class="products-container">
                         <div class="products-header">
                             <h2>{{ currentCategory ? currentCategory.charAt(0).toUpperCase() + currentCategory.slice(1) + "'s" : "All" }} Collection</h2>
@@ -410,6 +442,49 @@
                         </div>
                     </div>
                 </div>
+
+                <!-- Admin View -->
+                <div v-if="activeView === 'admin' && user?.role === 'admin'">
+                    <h2 style="margin-bottom: 2rem;">Admin Dashboard</h2>
+                    
+                    <!-- Navigation Tabs -->
+                    <div class="nav-tabs">
+                        <button 
+                            @click="adminActiveTab = 'overview'" 
+                            :class="{ active: adminActiveTab === 'overview' }"
+                            class="nav-tab"
+                        >
+                            Overview
+                        </button>
+                        <button 
+                            @click="adminActiveTab = 'products'" 
+                            :class="{ active: adminActiveTab === 'products' }"
+                            class="nav-tab"
+                        >
+                            Products
+                        </button>
+                        <button 
+                            @click="adminActiveTab = 'orders'" 
+                            :class="{ active: adminActiveTab === 'orders' }"
+                            class="nav-tab"
+                        >
+                            Orders
+                        </button>
+                        <button 
+                            @click="adminActiveTab = 'users'" 
+                            :class="{ active: adminActiveTab === 'users' }"
+                            class="nav-tab"
+                        >
+                            Users
+                        </button>
+                        <button 
+                            @click="adminActiveTab = 'chatbot'" 
+                            :class="{ active: adminActiveTab === 'chatbot' }"
+                            class="nav-tab"
+                        >
+                            Chatbot
+                        </button>
+                    </div>
 
                 <!-- Admin View -->
                 <div v-if="activeView === 'admin' && user?.role === 'admin'">
